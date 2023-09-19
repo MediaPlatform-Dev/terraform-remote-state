@@ -1,11 +1,15 @@
 resource "aws_s3_bucket" "this" {
   bucket = "${var.tags.Project}-${var.bucket}"
 
-  force_destroy = true
+  versioning {
+    enabled = true
+  }
 
-  #lifecycle {
-  #  prevent_destroy = true
-  #}
+  lifecycle {
+    prevent_destroy = true
+  }
+
+  force_destroy = true
 
   tags = merge(
     {
@@ -14,11 +18,4 @@ resource "aws_s3_bucket" "this" {
     },
     var.tags
   )
-}
-
-resource "aws_s3_bucket_versioning" "this" {
-  bucket = aws_s3_bucket.this.id
-  versioning_configuration {
-    status = "Enabled"
-  }
 }
